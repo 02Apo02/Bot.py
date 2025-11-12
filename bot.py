@@ -1,13 +1,10 @@
-import os
 import logging
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 
-# Telegram Token (Render'da Environment Variable olarak TELEGRAM_TOKEN eklenecek)
-TOKEN = os.environ.get("TELEGRAM_TOKEN")
+TOKEN = "8214173862:AAGvwgiv6LwsfonD1Ed29EPRNxyZcq5AC4A"  # Buraya senin token
 BOT_NAME = "TicaretSECURE"
 
-# Log ayarları
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO
@@ -19,7 +16,6 @@ warns = {}
 kullanici_seviyeleri = {}
 vip_kullanicilar = []
 
-# --- Komutlar ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         f"Merhaba! Ben {BOT_NAME}, bu grubu korumak ve destek olmak için buradayım.\n"
@@ -56,13 +52,11 @@ async def profil(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uyarilar = warns.get(user, 0)
     await update.message.reply_text(f"👤 {user}\nSeviye: {seviye}\nUyarılar: {uyarilar}")
 
-# --- Mesaj filtreleme ---
 async def mesaj(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.lower()
     user = update.message.from_user.username or update.message.from_user.first_name
     vip = user in vip_kullanicilar
 
-    # Teminat / POS / saha kuralları bilgilendirmesi
     if any(k in text for k in ["teminat", "pos", "saha"]):
         await update.message.reply_text(
             f"{user}, grup kurallarına dikkat edin! ❗\n"
@@ -74,28 +68,23 @@ async def mesaj(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-    # Küfür filtresi
     for k in küfür_listesi:
         if k in text:
             warns[user] = warns.get(user, 0) + 1
             await update.message.reply_text(f"{user}, küfür yasak! Uyarı sayısı: {warns[user]}")
             return
 
-    # Reklam filtresi
     for link in reklam_listesi:
         if link in text:
             warns[user] = warns.get(user, 0) + 1
             await update.message.reply_text(f"{user}, reklam yasak! Uyarı sayısı: {warns[user]}")
             return
 
-    # Otomatik selamlama
     if "merhaba" in text:
         await update.message.reply_text(f"Merhaba {user}! 👋")
 
-    # Kullanıcı seviye puanı
     kullanici_seviyeleri[user] = kullanici_seviyeleri.get(user, 0) + 1
 
-# --- Ana çalıştırıcı ---
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
 
