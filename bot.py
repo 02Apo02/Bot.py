@@ -1,13 +1,5 @@
-#!/usr/bin/env python3
-# TicaretSECURE - tek dosya, çok sayıda gerçek işlev
-import os
-import json
-import logging
-import random
-import datetime
-from typing import Dict, Any, List, Optional
-
-from telegram import ChatPermissions
+# Telegram ile ilgili temel importlar
+from telegram import Update, Bot, ChatPermissions
 from telegram.enums import ParseMode
 from telegram.ext import (
     ApplicationBuilder,
@@ -15,8 +7,16 @@ from telegram.ext import (
     MessageHandler,
     ContextTypes,
     filters,
-    JobQueue,
 )
+
+# Python standart kütüphaneleri
+import logging
+import asyncio
+import os
+import sys
+
+# Eğer HTTP veya webhook gerekiyorsa (opsiyonel)
+# from aiohttp import web  # Vercel veya webhook tabanlı botlar için
 
 # --- CONFIG ---
 TOKEN = os.environ.get("TELEGRAM_TOKEN", "8214173862:AAGvwgiv6LwsfonD1Ed29EPRNxyZcq5AC4A")
