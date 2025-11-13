@@ -14,13 +14,16 @@ from telegram.ext import (
     filters,
 )
 
-# Eğer HTTP veya webhook gerekiyorsa (opsiyonel)
-# from aiohttp import web  # Vercel veya webhook tabanlı botlar için
+# HTTP istekleri için Gemini API
+import httpx  # async API çağrısı için
 
 # --- CONFIG ---
 TOKEN = os.environ.get("TELEGRAM_TOKEN", "8214173862:AAGvwgiv6LwsfonD1Ed29EPRNxyZcq5AC4A")
 DATA_FILE = "data.json"
 BOT_NAME = "TicaretSECURE"
+
+# 🔹 Gemini API Key
+GEMINI_API_KEY = "AIzaSyCoiltm7ccrVrvixr2aPx5i6xRpsGsiIik"
 
 # --- LOGGING ---
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
@@ -566,6 +569,28 @@ async def mesaj(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await warn_cmd(update, context)
             save_data(data)
             return
+            # 🔹 Gemini /ai komutu
+GEMINI_API_KEY = "AIzaSyCoiltm7ccrVrvixr2aPx5i6xRpsGsiIik"
+
+async def ai_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.args:
+        await update.message.reply_text("Kullanım: /ai <soru veya mesaj>")
+        return
+    prompt = " ".join(context.args)
+    await update.message.reply_text("🤖 Düşünüyorum...")
+
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent",
+                params={"key": GEMINI_API_KEY},
+                json={"contents": [{"parts": [{"text": prompt}]}]},
+                timeout=60
+            )
+            data = response.json()
+            if "candidates" in data and len(data["candidates"]) > 0:
+                ai_text = data["candidates"][0]["content"]["parts"][0]["text"]
+                await update.message.reply_text(ai_text[:4000])
 
     # Reklam kontrolü
     for link in data["reklam_listesi"]:
@@ -602,7 +627,7 @@ def main():
     app.add_handler(CommandHandler("kurallar", kurallar))
     app.add_handler(CommandHandler("profil", profil))
     app.add_handler(CommandHandler("istatistik", istatistik))
-
+    app.add_handler(CommandHandler("ai", ai_cmd))
     # VIP & teminat
     app.add_handler(CommandHandler("vip_ekle", vip_ekle))
     app.add_handler(CommandHandler("vip_cikar", vip_cikar))
