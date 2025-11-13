@@ -1,5 +1,11 @@
+import os
+import asyncio
+import logging
+import json
+from typing import Dict, Any, Optional
+
 from telegram import Update, Bot, ChatPermissions
-from telegram.constants import ParseMode  # <- Burada doğru import
+from telegram.constants import ParseMode
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -7,10 +13,6 @@ from telegram.ext import (
     ContextTypes,
     filters,
 )
-
-import os
-import asyncio
-import logging
 
 # Eğer HTTP veya webhook gerekiyorsa (opsiyonel)
 # from aiohttp import web  # Vercel veya webhook tabanlı botlar için
