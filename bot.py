@@ -7,7 +7,8 @@ import random
 import datetime
 from typing import Dict, Any, List, Optional
 
-from telegram import Update, ChatPermissions, ParseMode
+from telegram import ChatPermissions
+from telegram.enums import ParseMode
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
