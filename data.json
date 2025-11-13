@@ -1,0 +1,16 @@
+{
+  "küfür_listesi": ["örnek_küfür1", "örnek_küfür2"],
+  "reklam_listesi": ["t.me/", "http://", "https://"],
+  "warns": {},
+  "levels": {},
+  "puanlar": {},
+  "vip": [],
+  "teminat_pos": {},
+  "teminat_saha": {},
+  "hatirlatmalar": {},
+  "logs": [],
+  "stats": {
+    "messages": {},
+    "total_messages": 0
+  }
+}
