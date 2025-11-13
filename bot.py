@@ -1,6 +1,5 @@
 # Telegram ile ilgili temel importlar
-from telegram import Update, Bot, ChatPermissions
-from telegram.enums import ParseMode
+from telegram import Update, Bot, ChatPermissions, ParseMode
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -13,7 +12,6 @@ from telegram.ext import (
 import logging
 import asyncio
 import os
-import sys
 
 # Eğer HTTP veya webhook gerekiyorsa (opsiyonel)
 # from aiohttp import web  # Vercel veya webhook tabanlı botlar için
